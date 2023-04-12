@@ -30,6 +30,6 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 ## 💻 Projeto
 
-Desafio final do curso Explorer da Rocketseat.
-⚠️ Importante: Este projeto está utilizando uma hospedagem gratuita para o seu backend, portanto, pode haver atrasos no tempo de resposta do servidor.
+- Desafio final do curso Explorer da Rocketseat.
+- ⚠️Importante: Este projeto está utilizando uma hospedagem gratuita para o seu backend, portanto, pode haver atrasos no tempo de resposta do servidor.
 ##
