@@ -1,5 +1,5 @@
 const AppError = require("../utils/AppError");
-const knex = require("../database/knex")
+const knex = require("../database/knex");
 
 class DishesController {
   async create(req, res) {
@@ -60,6 +60,40 @@ class DishesController {
     await knex('ingredients').insert(ingredientsInsert);
 
     return res.status(200).json();
+  }
+
+  async show(req, res) {
+    const { id } = req.params;
+
+    const dish = await knex("dishes").where({ id }).first();
+    const ingredients = await knex("ingredients").where({ dish_id: id }).orderBy("name");
+
+    return res.json({
+      ...dish,
+      ingredients
+    });
+  }
+
+  async index(req, res) {
+    const { search } = req.query;
+
+
+    const dishes = await knex.select("dishes.*")
+      .from("dishes")
+      .innerJoin("ingredients", "dishes.id", "=", "ingredients.dish_id")
+      .whereLike("dishes.name", `%${search}%`)
+      .orWhereLike("ingredients.name", `%${search}%`)
+      .groupBy('dishes.name');
+
+    return res.json(dishes);
+  }
+
+  async delete(req, res) {
+    const { id } = req.params;
+
+    await knex("dishes").where({ id }).delete();
+
+    return res.json();
   }
 }
 
