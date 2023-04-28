@@ -67,11 +67,25 @@ class UsersController {
       user.password = await hash(password, 12);
     }
 
+    function zeroLeft(num) {
+      return num >= 10 ? num : `0${num}`
+    }
+
+    function updateDate(data) {
+      const day = zeroLeft(data.getDate());
+      const month = zeroLeft(data.getMonth() + 1);
+      const year = zeroLeft(data.getFullYear());
+      const hours = zeroLeft(data.getHours());
+      const minutes = zeroLeft(data.getMinutes());
+
+      return `${day}/${month}/${year} às ${hours}:${minutes}`
+    }
+
     await knex("users").update({
       name: user.name,
       email: user.email,
       password: user.password,
-      updated_at: knex.fn.now(),
+      updated_at: updateDate(new Date()),
     }).where({ id });
 
     return res.status(200).json();
