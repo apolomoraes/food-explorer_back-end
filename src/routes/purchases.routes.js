@@ -5,7 +5,7 @@ const PurchasesController = require("../controllers/PurchasesController");
 const purchasesController = new PurchasesController();
 
 purchasesRoutes.post("/:user_id", purchasesController.create);
-// purchasesRoutes.get("/:user_id", purchasesController.index);
-// purchasesRoutes.delete("/:id", purchasesController.delete);
+purchasesRoutes.patch("/:id", purchasesController.update);
+purchasesRoutes.get("/:user_id", purchasesController.index);
 
 module.exports = purchasesRoutes;

@@ -27,14 +27,56 @@ class PurchasesController {
       ''
     );
 
+    function zeroLeft(num) {
+      return num >= 10 ? num : `0${num}`
+    }
+
+    function updateDate(data) {
+      const day = zeroLeft(data.getDate());
+      const month = zeroLeft(data.getMonth() + 1);
+      const year = zeroLeft(data.getFullYear());
+      const hours = zeroLeft(data.getHours());
+      const minutes = zeroLeft(data.getMinutes());
+
+      return `${day}/${month}/${year} às ${hours}:${minutes}`
+    }
+
     await knex('purchases').insert({
       user_id,
       details: detailing.slice(0, -2),
-      created_at: new Date(),
+      created_at: updateDate(new Date())
     });
     await knex('requests').where({ user_id }).delete();
 
     return res.status(201).json();
+  }
+
+  async update(req, res) {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    await knex('purchases')
+      .update({
+        status,
+        updated_at: knex.fn.now()
+      })
+      .where({ id });
+
+    return res.status(200).json();
+  }
+
+  async index(req, res) {
+    const { user_id } = req.params;
+
+    const user = await knex('users').where({ id: user_id }).first();
+    const userAdmin = user.admin === 1;
+
+    let purchases;
+
+    if (userAdmin) purchases = await knex('purchases');
+    else purchases = await knex('purchases').where({ user_id });
+
+    return res.status(200).json(purchases);
   }
 }
 

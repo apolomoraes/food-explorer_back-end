@@ -11,20 +11,6 @@ class RequestController {
 
     if (!user || !dish) throw new AppError("Usuário ou prato não encontrado");
 
-    // function zeroLeft(num) {
-    //   return num >= 10 ? num : `0${num}`
-    // }
-
-    // function updateDate(data) {
-    //   const day = zeroLeft(data.getDate());
-    //   const month = zeroLeft(data.getMonth() + 1);
-    //   const year = zeroLeft(data.getFullYear());
-    //   const hours = zeroLeft(data.getHours());
-    //   const minutes = zeroLeft(data.getMinutes());
-
-    //   return `${day}/${month}/${year} às ${hours}:${minutes}`
-    // }
-
     const existRequest = await knex("requests").where({ user_id, dish_id }).first();
 
     if (existRequest) {
