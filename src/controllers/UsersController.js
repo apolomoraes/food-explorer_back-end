@@ -10,6 +10,11 @@ class UsersController {
       throw new AppError("Preencha todos os campos");
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new AppError("Endereço de e-mail inválido");
+    }
+
     const checkUserExist = await knex("users").where({ email }).first();
 
     if (checkUserExist) {
@@ -36,6 +41,11 @@ class UsersController {
 
     if (!user) {
       throw new AppError("Usuário não encontrado");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      throw new AppError("Endereço de e-mail inválido");
     }
 
     let userWithUpdatedEmail;
@@ -67,25 +77,11 @@ class UsersController {
       user.password = await hash(password, 12);
     }
 
-    function zeroLeft(num) {
-      return num >= 10 ? num : `0${num}`
-    }
-
-    function updateDate(data) {
-      const day = zeroLeft(data.getDate());
-      const month = zeroLeft(data.getMonth() + 1);
-      const year = zeroLeft(data.getFullYear());
-      const hours = zeroLeft(data.getHours());
-      const minutes = zeroLeft(data.getMinutes());
-
-      return `${day}/${month}/${year} às ${hours}:${minutes}`
-    }
-
     await knex("users").update({
       name: user.name,
       email: user.email,
       password: user.password,
-      updated_at: updateDate(new Date()),
+      updated_at: knex.fn.now()
     }).where({ id });
 
     return res.status(200).json();
