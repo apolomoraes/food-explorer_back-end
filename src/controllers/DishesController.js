@@ -49,15 +49,16 @@ class DishesController {
       updated_at: knex.fn.now()
     });
 
-    // Insere os novos ingredientes
-    const ingredientsInsert = ingredients.map(name => {
+    const newIngredientsInsert = ingredients.map(name => {
       return {
         dish_id: id,
         name,
       };
     });
 
-    await knex('ingredients').insert(ingredientsInsert);
+    await knex("ingredients").where({ dish_id: id }).delete();
+
+    await knex('ingredients').insert(newIngredientsInsert);
 
     return res.status(200).json();
   }
@@ -66,6 +67,11 @@ class DishesController {
     const { id } = req.params;
 
     const dish = await knex("dishes").where({ id }).first();
+
+    if (!dish) {
+      throw new AppError('Prato não encontrado');
+    }
+
     const ingredients = await knex("ingredients").where({ dish_id: id }).orderBy("name");
 
     return res.json({
