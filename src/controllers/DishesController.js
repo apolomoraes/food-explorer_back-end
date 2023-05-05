@@ -10,23 +10,30 @@ class DishesController {
       throw new AppError("Preencha todos os campos");
     }
 
-    const [dish_id] = await knex("dishes").insert({
-      name,
-      category,
-      price,
-      description,
-      image,
-      user_id
-    });
+    const user = await knex('users').where({ id: user_id }).first();
+    const userAdmin = user.admin === 1;
 
-    const ingredientsInsert = ingredients.map(name => {
-      return {
-        dish_id,
-        name
-      }
-    });
+    if (!userAdmin) {
+      throw new AppError("Usuário não autorizado");
+    } else {
+      const [dish_id] = await knex("dishes").insert({
+        name,
+        category,
+        price,
+        description,
+        image,
+        user_id
+      });
 
-    await knex("ingredients").insert(ingredientsInsert);
+      const ingredientsInsert = ingredients.map(name => {
+        return {
+          dish_id,
+          name
+        }
+      });
+
+      await knex("ingredients").insert(ingredientsInsert);
+    }
 
     return res.status(201).json();
   }
@@ -39,6 +46,12 @@ class DishesController {
       throw new AppError("Preencha todos os campos");
     }
 
+    // const user = await knex('users').where({ id: user_id }).first();
+    // const userAdmin = user.admin === 1;
+
+    // if (!userAdmin) {
+    //   throw new AppError("Usuário não autorizado");
+    // } else {
     // Atualiza os dados principais do prato
     await knex('dishes').where({ id }).update({
       name,
@@ -59,6 +72,7 @@ class DishesController {
     await knex("ingredients").where({ dish_id: id }).delete();
 
     await knex('ingredients').insert(newIngredientsInsert);
+    // }
 
     return res.status(200).json();
   }
