@@ -27,6 +27,13 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - Express
 - SQLite
 - Knex
+- JWT
+- Multer
+- Jest (Teste automatizado)
+- Cors
+- PM2
+
+## 🖌️ Veja o [Front-end](https://github.com/apolomoraes/food-explorer_front-end) 
 
 ## 💻 Projeto
 
