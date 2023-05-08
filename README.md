@@ -1,4 +1,4 @@
-<h1 align="center"> Food Explorer </h1>
+<h1 align="center"> Food Explorer (Back-end) </h1>
 
 <p align="center">
 Aplicação para ser usada como cardápio digital ou menu interativo para um restaurante, lanchonete, etc.
