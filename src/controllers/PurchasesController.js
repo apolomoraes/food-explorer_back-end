@@ -3,7 +3,7 @@ const knex = require("../database/knex");
 
 class PurchasesController {
   async create(req, res) {
-    const { user_id } = req.params;
+    const user_id = req.user.id;
 
     const requests = await knex("requests")
       .select(
@@ -54,19 +54,27 @@ class PurchasesController {
   async update(req, res) {
     const { status } = req.body;
     const { id } = req.params;
+    const user_id = req.user.id;
 
-    await knex('purchases')
-      .update({
-        status,
-        updated_at: knex.fn.now()
-      })
-      .where({ id });
+    const user = await knex('users').where({ id: user_id }).first();
+    const userAdmin = user.admin === 1;
+
+    if (!userAdmin) {
+      throw new AppError("Usuário não autorizado")
+    } else {
+      await knex('purchases')
+        .update({
+          status,
+          updated_at: knex.fn.now()
+        })
+        .where({ id });
+    }
 
     return res.status(200).json();
   }
 
   async index(req, res) {
-    const { user_id } = req.params;
+    const user_id = req.user.id;
 
     const user = await knex('users').where({ id: user_id }).first();
     const userAdmin = user.admin === 1;

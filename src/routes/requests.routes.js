@@ -4,8 +4,11 @@ const requestsRoutes = Router();
 const RequestsController = require("../controllers/RequestController");
 const requestsController = new RequestsController();
 
-requestsRoutes.post("/:user_id", requestsController.create);
-requestsRoutes.get("/:user_id", requestsController.index);
+const ensureAuthenticated = require("../middlewares/ensureAuthenticated");
+
+requestsRoutes.use(ensureAuthenticated);
+requestsRoutes.post("/", requestsController.create);
+requestsRoutes.get("/", requestsController.index);
 requestsRoutes.delete("/:id", requestsController.delete);
 
 module.exports = requestsRoutes;

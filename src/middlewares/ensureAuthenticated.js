@@ -12,7 +12,7 @@ function ensureAuthenticated(req, res, next) {
   try {
     const { sub: user_id } = verify(token, authConfig.jwt.secret);
 
-    request.user = {
+    req.user = {
       id: Number(user_id)
     };
 
@@ -22,4 +22,4 @@ function ensureAuthenticated(req, res, next) {
   };
 }
 
-modules.exports = ensureAuthenticated;
+module.exports = ensureAuthenticated;

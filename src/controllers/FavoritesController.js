@@ -3,7 +3,7 @@ const knex = require("../database/knex");
 
 class FavoritesController {
   async create(req, res) {
-    const { user_id } = req.params;
+    const user_id = req.user.id;
     const { dish_id } = req.params;
 
     const user = await knex("users").where({ id: user_id }).first();
@@ -30,7 +30,7 @@ class FavoritesController {
   }
 
   async index(req, res) {
-    const { user_id } = req.params;
+    const user_id = req.user.id;
 
     const favorites = await knex("favorites")
       .select(["dishes.id", "dishes.name", "dishes.image", "favorites.id"])

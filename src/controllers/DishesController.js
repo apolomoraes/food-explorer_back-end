@@ -4,7 +4,7 @@ const knex = require("../database/knex");
 class DishesController {
   async create(req, res) {
     const { name, category, price, description, ingredients, image } = req.body;
-    const { user_id } = req.params;
+    const user_id = req.user.id;
 
     if (!name || !category || !price || !description || !ingredients || !image) {
       throw new AppError("Preencha todos os campos");
@@ -41,38 +41,39 @@ class DishesController {
   async update(req, res) {
     const { name, category, price, description, ingredients, image } = req.body;
     const { id } = req.params;
+    const user_id = req.user.id;
 
     if (!name || !category || !price || !description || !ingredients || !image) {
       throw new AppError("Preencha todos os campos");
     }
 
-    // const user = await knex('users').where({ id: user_id }).first();
-    // const userAdmin = user.admin === 1;
+    const user = await knex('users').where({ id: user_id }).first();
+    const userAdmin = user.admin === 1;
 
-    // if (!userAdmin) {
-    //   throw new AppError("Usuário não autorizado");
-    // } else {
-    // Atualiza os dados principais do prato
-    await knex('dishes').where({ id }).update({
-      name,
-      category,
-      price,
-      description,
-      image,
-      updated_at: knex.fn.now()
-    });
-
-    const newIngredientsInsert = ingredients.map(name => {
-      return {
-        dish_id: id,
+    if (!userAdmin) {
+      throw new AppError("Usuário não autorizado");
+    } else {
+      // Atualiza os dados principais do prato
+      await knex('dishes').where({ id }).update({
         name,
-      };
-    });
+        category,
+        price,
+        description,
+        image,
+        updated_at: knex.fn.now()
+      });
 
-    await knex("ingredients").where({ dish_id: id }).delete();
+      const newIngredientsInsert = ingredients.map(name => {
+        return {
+          dish_id: id,
+          name,
+        };
+      });
 
-    await knex('ingredients').insert(newIngredientsInsert);
-    // }
+      await knex("ingredients").where({ dish_id: id }).delete();
+
+      await knex('ingredients').insert(newIngredientsInsert);
+    }
 
     return res.status(200).json();
   }
@@ -110,8 +111,16 @@ class DishesController {
 
   async delete(req, res) {
     const { id } = req.params;
+    const user_id = req.user.id;
 
-    await knex("dishes").where({ id }).delete();
+    const user = await knex('users').where({ id: user_id }).first();
+    const userAdmin = user.admin === 1;
+
+    if (!userAdmin) {
+      throw new AppError("Usuário não autorizado");
+    } else {
+      await knex("dishes").where({ id }).delete();
+    }
 
     return res.json();
   }

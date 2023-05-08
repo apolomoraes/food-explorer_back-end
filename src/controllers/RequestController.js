@@ -3,7 +3,7 @@ const knex = require("../database/knex");
 
 class RequestController {
   async create(req, res) {
-    const { user_id } = req.params;
+    const user_id = req.user.id;
     const { quantity, dish_id } = req.body;
 
     const user = await knex('users').where({ id: user_id }).first();
@@ -29,7 +29,7 @@ class RequestController {
   }
 
   async index(req, res) {
-    const { user_id } = req.params;
+    const user_id = req.user.id;
 
     const requests = await knex("requests")
       .select(
