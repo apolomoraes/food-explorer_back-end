@@ -1,10 +1,14 @@
 const AppError = require("../utils/AppError");
 const knex = require("../database/knex");
+const DiskStorage = require("../providers/DiskStorage");
 
 class DishesController {
   async create(req, res) {
-    const { name, category, price, description, ingredients, image } = req.body;
     const user_id = req.user.id;
+    const { name, category, price, description, ingredients } = req.body;
+    const image = req.file.filename
+
+    const diskStorage = new DiskStorage()
 
     if (!name || !category || !price || !description || !ingredients || !image) {
       throw new AppError("Preencha todos os campos");
@@ -16,12 +20,14 @@ class DishesController {
     if (!userAdmin) {
       throw new AppError("Usuário não autorizado");
     } else {
+      const filename = await diskStorage.saveFile(image)
+
       const [dish_id] = await knex("dishes").insert({
         name,
         category,
         price,
         description,
-        image,
+        image: filename,
         user_id
       });
 
@@ -39,9 +45,12 @@ class DishesController {
   }
 
   async update(req, res) {
-    const { name, category, price, description, ingredients, image } = req.body;
-    const { id } = req.params;
     const user_id = req.user.id;
+    const { name, category, price, description, ingredients } = req.body;
+    const { id } = req.params;
+    const image = req.file.filename
+
+    const diskStorage = new DiskStorage()
 
     if (!name || !category || !price || !description || !ingredients || !image) {
       throw new AppError("Preencha todos os campos");
@@ -53,13 +62,21 @@ class DishesController {
     if (!userAdmin) {
       throw new AppError("Usuário não autorizado");
     } else {
+
+      const dish = await knex("dishes").where({ id }).first();
+
+      if (dish.image) {
+        await diskStorage.deleteFile(dish.image)
+      }
+
+      const filename = await diskStorage.saveFile(image)
       // Atualiza os dados principais do prato
       await knex('dishes').where({ id }).update({
         name,
         category,
         price,
         description,
-        image,
+        image: filename,
         updated_at: knex.fn.now()
       });
 
