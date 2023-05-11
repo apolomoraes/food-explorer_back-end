@@ -62,7 +62,6 @@ class DishesController {
     if (!userAdmin) {
       throw new AppError("Usuário não autorizado");
     } else {
-
       const dish = await knex("dishes").where({ id }).first();
 
       if (dish.image) {
