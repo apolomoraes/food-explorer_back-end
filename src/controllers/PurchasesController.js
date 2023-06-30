@@ -27,24 +27,10 @@ class PurchasesController {
       ''
     );
 
-    function zeroLeft(num) {
-      return num >= 10 ? num : `0${num}`
-    }
-
-    function updateDate(data) {
-      const day = zeroLeft(data.getDate());
-      const month = zeroLeft(data.getMonth() + 1);
-      const year = zeroLeft(data.getFullYear());
-      const hours = zeroLeft(data.getHours());
-      const minutes = zeroLeft(data.getMinutes());
-
-      return `${day}/${month}/${year} às ${hours}:${minutes}`
-    }
-
     await knex('purchases').insert({
       user_id,
       details: detailing.slice(0, -2),
-      created_at: updateDate(new Date())
+      created_at: new Date()
     });
     await knex('requests').where({ user_id }).delete();
 
