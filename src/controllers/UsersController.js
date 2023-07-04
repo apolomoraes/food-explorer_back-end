@@ -10,9 +10,18 @@ class UsersController {
       throw new AppError("Preencha todos os campos");
     }
 
+    if (password.length < 6) {
+      throw new AppError("A senha deve ter no mínimo 6 caracteres");
+    }
+
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       throw new AppError("Endereço de e-mail inválido");
+    }
+
+    const passwordRegex = /^\S+$/;
+    if (!passwordRegex.test(password)) {
+      throw new AppError("A senha não pode conter espaços em branco");
     }
 
     const checkUserExist = await knex("users").where({ email }).first();
