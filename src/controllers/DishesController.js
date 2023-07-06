@@ -31,12 +31,13 @@ class DishesController {
         user_id
       });
 
-      const ingredientsInsert = ingredients.map(name => {
+      const ingredientsInsert = JSON.parse(ingredients).map(name => {
         return {
           dish_id,
           name
         }
       });
+      console.log(ingredientsInsert)
 
       await knex("ingredients").insert(ingredientsInsert);
     }
