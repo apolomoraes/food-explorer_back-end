@@ -4,7 +4,7 @@ const knex = require("../database/knex");
 class FavoritesController {
   async create(req, res) {
     const user_id = req.user.id;
-    const { dish_id } = req.params;
+    const { dish_id } = req.body;
 
     const user = await knex("users").where({ id: user_id }).first();
     const dish = await knex("dishes").where({ id: dish_id }).first();
@@ -19,7 +19,7 @@ class FavoritesController {
       throw new AppError("Prato já favoritado");
     }
 
-    const id = await knex("favorites").insert(
+    const [id] = await knex("favorites").insert(
       {
         user_id,
         dish_id
@@ -33,7 +33,7 @@ class FavoritesController {
     const user_id = req.user.id;
 
     const favorites = await knex("favorites")
-      .select(["dishes.id", "dishes.name", "dishes.image", "favorites.id"])
+      .select(["dishes.id as dish_id", "dishes.name", "dishes.image", "favorites.id"])
       .innerJoin("dishes", "dishes.id", "=", "favorites.dish_id")
       .where("favorites.user_id", user_id);
 

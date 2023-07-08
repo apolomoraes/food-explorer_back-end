@@ -6,11 +6,12 @@ class DishesController {
   async create(req, res) {
     const user_id = req.user.id;
     const { name, category, price, description, ingredients } = req.body;
-    const image = req.file.filename
+    let image = null;
+    let filename = null;
 
     const diskStorage = new DiskStorage()
 
-    if (!name || !category || !price || !description || !ingredients || !image) {
+    if (!name || !category || !price || !description || !ingredients) {
       throw new AppError("Preencha todos os campos");
     }
 
@@ -20,14 +21,19 @@ class DishesController {
     if (!userAdmin) {
       throw new AppError("Usuário não autorizado");
     } else {
-      const filename = await diskStorage.saveFile(image)
+
+      if (req.file) {
+        image = req.file.filename
+        filename = await diskStorage.saveFile(image)
+      }
+
 
       const [dish_id] = await knex("dishes").insert({
         name,
         category,
         price,
         description,
-        image: filename,
+        image: image ? filename : null,
         user_id
       });
 
@@ -37,7 +43,6 @@ class DishesController {
           name
         }
       });
-      console.log(ingredientsInsert)
 
       await knex("ingredients").insert(ingredientsInsert);
     }
@@ -53,7 +58,7 @@ class DishesController {
 
     const diskStorage = new DiskStorage()
 
-    if (!name || !category || !price || !description || !ingredients || !image) {
+    if (!name || !category || !price || !description || !ingredients) {
       throw new AppError("Preencha todos os campos");
     }
 
