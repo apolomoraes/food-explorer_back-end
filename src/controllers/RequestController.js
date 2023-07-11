@@ -50,6 +50,28 @@ class RequestController {
 
     return res.json(totalOrderValue);
   }
+
+  async show(req, res) {
+    const user_id = req.user.id;
+
+    const requests = await knex("requests")
+      .select(
+        "requests.dish_id",
+        "requests.quantity"
+      )
+      .from("requests")
+      .where("requests.user_id", user_id);
+
+
+    let totalQuantity = 0;
+
+    requests.forEach((request) => {
+      totalQuantity += request.quantity;
+    });
+
+
+    return res.json({ totalQuantity });
+  }
   async delete(req, res) {
     const { id } = req.params;
 

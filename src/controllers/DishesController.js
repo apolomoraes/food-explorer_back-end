@@ -85,7 +85,7 @@ class DishesController {
         updated_at: knex.fn.now()
       });
 
-      const newIngredientsInsert = ingredients.map(name => {
+      const newIngredientsInsert = JSON.parse(ingredients).map(name => {
         return {
           dish_id: id,
           name,
