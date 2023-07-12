@@ -28,10 +28,43 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 - SQLite
 - Knex
 - JWT
+- Dotenv
 - Multer
-- Jest (Teste automatizado)
 - Cors
 - PM2
+
+##
+
+## 💡 Utilização
+  Deploy: https://foodexplorer-apolomoraes.netlify.app
+
+  Você também pode executá-la em sua máquina localmente. Certifique-se de ter o Node.js e o npm instalados antes de prosseguir com as etapas abaixo:
+
+  1. Clone o projeto:
+
+  ```
+  git clone https://github.com/apolomoraes/food-explorer_back-end.git
+  ou
+  gh repo clone apolomoraes/food-explorer_back-end
+  ```
+
+  2. Acesse a pasta do projeto:
+
+  ```
+  $ cd food-explorer_back-end
+  ```
+
+  3. Instale as dependências:
+
+  ```
+  $ npm install
+  ```
+
+  4. Inicie o servidor:
+
+  ```
+  $ npm start
+  ```
 
 ##
 
