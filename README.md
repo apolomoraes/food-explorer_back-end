@@ -67,7 +67,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
   $ npm start
   ```
 
-  ⚠️ Importante: Crie um arquivo .env de acordo com o arquivo .env.example e preencha os campos AUTH_SECRET e PORT com suas respectivas informações.
+  ⚠️ Importante: Crie um arquivo .env de acordo com o arquivo .env.example e preencha os campos AUTH_SECRET e SERVER_PORT com suas respectivas informações.
 
 ##
 
