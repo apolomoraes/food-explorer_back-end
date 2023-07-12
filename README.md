@@ -37,6 +37,7 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
 
 ## 💡 Utilização
   Deploy: https://foodexplorer-apolomoraes.netlify.app
+  Deploy back-end: https://foodexplorer-api-vvc0.onrender.com
 
   Você também pode executá-la em sua máquina localmente. Certifique-se de ter o Node.js e o npm instalados antes de prosseguir com as etapas abaixo:
 
@@ -65,6 +66,8 @@ Esse projeto foi desenvolvido com as seguintes tecnologias:
   ```
   $ npm start
   ```
+
+  ⚠️ Importante: Crie um arquivo .env de acordo com o arquivo .env.example e preencha os campos AUTH_SECRET e PORT com suas respectivas informações.
 
 ##
 
