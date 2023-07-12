@@ -54,7 +54,8 @@ class DishesController {
     const user_id = req.user.id;
     const { name, category, price, description, ingredients } = req.body;
     const { id } = req.params;
-    const image = req.file.filename
+    let image = null;
+    let filename = null;
 
     const diskStorage = new DiskStorage()
 
@@ -70,12 +71,17 @@ class DishesController {
     } else {
       const dish = await knex("dishes").where({ id }).first();
 
-      if (dish.image) {
-        await diskStorage.deleteFile(dish.image)
+      filename = dish.image
+
+      if (req.file) {
+        if (dish.image) {
+          await diskStorage.deleteFile(dish.image)
+        }
+
+        image = req.file.filename
+        filename = await diskStorage.saveFile(image)
       }
 
-      const filename = await diskStorage.saveFile(image)
-      // Atualiza os dados principais do prato
       await knex('dishes').where({ id }).update({
         name,
         category,
